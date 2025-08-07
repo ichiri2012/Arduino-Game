@@ -5,7 +5,9 @@ ArduinoLEDMatrix matrix;
 
 byte myMap[8][12];
 uint8_t py = 0;
-int frame = 0;
+
+PinStatus now = HIGH;
+PinStatus last = HIGH;
 
 void setup()
 {
@@ -14,21 +16,16 @@ void setup()
   
   pinMode(BUTTON_A, INPUT_PULLUP);
   pinMode(BUTTON_B, INPUT_PULLUP);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   py = 7 - GROUND_HEIGHT;
-  
 
-  
-}
-
-void renderMap()
-{
   for(int line = 0; line < 8;line++)
   {
     for(int chr = 0; chr < 12; chr++)
     {
       if((8 - line) <= GROUND_HEIGHT || 
-        ((line == py || line == (py - 1)) && chr == PLAYER_X))
+        (line == py && chr == PLAYER_X))
       {
         myMap[line][chr] = 1;
       }
@@ -43,23 +40,30 @@ void renderMap()
 
 void loop()
 {
-  Serial.print("FRAME:");
-  Serial.println(frame);
-  frame++;
-  if(frame > 5000)
+  now = digitalRead(BUTTON_A);
+  matrix.renderBitmap(myMap, 8, 12);
+  if(now == HIGH && last == LOW)
   {
-    frame = 0;
-  }
-  /*matrix.renderBitmap(myMap, 8, 12);
-  if(!digitalRead(BUTTON_A))
-  {
-    py += 3;
-    renderMap();
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(120);
+    myMap[py][PLAYER_X] = 0;
+    py--;
+    myMap[py][PLAYER_X] = 1;
     matrix.renderBitmap(myMap, 8, 12);
-    
-    delay(1000);
-    py -= 3;
+    delay(120);
+    myMap[py][PLAYER_X] = 0;
+    py++;
+    myMap[py][PLAYER_X] = 1;
+    matrix.renderBitmap(myMap, 8, 12);
+    delay(120);
+
+
+  } else {
+    digitalWrite(LED_BUILTIN, LOW);
   }
+
+  last = now;
+  /*
   if(!digitalRead(BUTTON_B))
   {
     Serial.println("Button B Pressed");
