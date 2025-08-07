@@ -1,2 +1,8 @@
 # Arduino-Game
-A simple game for the Arduino UNO R4 WIFI, demonstrating onboard features and Wi-Fi capabilities. 
+for Arduino UNO R4 Wifi.
+
+# Credit
+Created by Romeolona.
+
+# License
+MIT License.
