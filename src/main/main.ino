@@ -38,6 +38,13 @@ void setup()
   }
 }
 
+void change_py(int8_t amount)
+{
+  myMap[py][PLAYER_X] = 0;
+  py += amount;
+  myMap[py][PLAYER_X] = 1;
+}
+
 void loop()
 {
   now = digitalRead(BUTTON_A);
@@ -45,17 +52,26 @@ void loop()
   if(now == HIGH && last == LOW)
   {
     digitalWrite(LED_BUILTIN, HIGH);
-    delay(120);
-    myMap[py][PLAYER_X] = 0;
-    py--;
-    myMap[py][PLAYER_X] = 1;
+    delay(50);
+    change_py(-1);
     matrix.renderBitmap(myMap, 8, 12);
-    delay(120);
-    myMap[py][PLAYER_X] = 0;
-    py++;
-    myMap[py][PLAYER_X] = 1;
+    delay(70);
+    change_py(-1);
     matrix.renderBitmap(myMap, 8, 12);
+    delay(100);
+    change_py(-1);
+    matrix.renderBitmap(myMap, 8, 12);
+
     delay(120);
+
+    change_py(1);
+    matrix.renderBitmap(myMap, 8, 12);
+    delay(100);
+    change_py(1);
+    matrix.renderBitmap(myMap, 8, 12);
+    delay(70);
+    change_py(1);
+    matrix.renderBitmap(myMap, 8, 12);
 
 
   } else {
